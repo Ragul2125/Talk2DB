@@ -1,0 +1,5 @@
+.Sidebar{
+    height: 100dvh;
+    width: 270px;
+    background-color: var(--navcolor);
+}
