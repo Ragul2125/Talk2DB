@@ -1,10 +1,8 @@
 import React from "react";
 import "./SideNav.css";
-import { LuPanelLeftClose } from "react-icons/lu";
-import { LuPanelRightClose } from "react-icons/lu";
+import { LuPanelLeftClose, LuPanelRightClose, LuLogOut } from "react-icons/lu";
 import { HiOutlinePencilAlt } from "react-icons/hi";
 import profileImg from "../../assets/profile_img.jpg";
-import { LuLogOut } from "react-icons/lu";
 import History from "./Comp/History";
 
 const SideNav = ({ isOpen, setIsOpen }) => {
@@ -14,12 +12,17 @@ const SideNav = ({ isOpen, setIsOpen }) => {
 
   return (
     <>
+      {/* Toggle Button (Only shown when sidebar is closed) */}
       {!isOpen && (
         <button className="sidebar-toggle-btn" onClick={toggleSidebar}>
           <LuPanelRightClose />
         </button>
       )}
-      
+
+      {/* Overlay (Visible only when sidebar is open) */}
+      {isOpen && <div className="overlay" onClick={toggleSidebar}></div>}
+
+      {/* Sidebar */}
       <div className={`Sidebar ${isOpen ? "open" : "closed"}`}>
         <div className="sideNav-top">
           <header>
@@ -34,9 +37,11 @@ const SideNav = ({ isOpen, setIsOpen }) => {
             <History />
           </div>
         </div>
+
+        {/* Profile Section */}
         <div className="profile">
           <div className="profile-img">
-            <img src={profileImg} alt="" />
+            <img src={profileImg} alt="Profile" />
           </div>
           <div className="user-name">
             <p>Adela Parkson</p>

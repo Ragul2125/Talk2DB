@@ -1,4 +1,4 @@
-/* Base styles */
+/* Base Sidebar Styles */
 .Sidebar {
   height: 100dvh;
   width: 270px;
@@ -8,7 +8,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease-in-out;
   position: fixed;
   top: 0;
   left: 0;
@@ -16,23 +16,48 @@
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
 }
 
+/* Sidebar Hidden (default) */
 .Sidebar.closed {
   transform: translateX(-100%);
 }
 
+/* Sidebar Toggle Button */
 .sidebar-toggle-btn {
   position: fixed;
-  left: 5px;
-  top: 10px;
-  background-color: var(--navcolor);
-  color: white;
+  left: 10px;
+  top: 15px;
+  color: var(--navcolor);
+  background: transparent;
   border: none;
   border-radius: 5px;
   padding: 10px;
   cursor: pointer;
-  z-index: 99;
-  display: block;
+  z-index: 110;
   font-size: 1.5em;
+}
+
+/* Overlay for Mobile */
+.overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 99;
+}
+
+/* RESPONSIVE OVERLAY BEHAVIOR */
+@media screen and (max-width: 768px) {
+  .Sidebar {
+    width: 80%;
+    max-width: 300px;
+  }
+
+  .overlay {
+    display: block;
+  }
 }
 
 .sideNav-top {

@@ -17,7 +17,7 @@ const ChatArea = ({ sidebarOpen }) => {
       const newMessage = {
         id: new Date().getTime(),
         text: value,
-        sender: "user",
+        sender: "bot",
       };
       setMessages([...messages, newMessage]);
       setValue("");

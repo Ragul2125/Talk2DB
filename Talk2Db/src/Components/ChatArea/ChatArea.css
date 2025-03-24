@@ -27,44 +27,59 @@
     font-weight: 400;
   }
 }
+
 /* chat input area */
 .chat-bottom {
   width: 100%;
-  height: 120px;
 }
 .chat-container {
   display: flex;
-}
-.chat-input {
-  display: flex;
+  justify-content: center;
+  padding: 10px;
   width: 100%;
-  border: 1px solid #00132f82;
-  border-radius: 50px;
-  height: 64px;
-  input {
-    width: 100%;
-    height: 100%;
-    font-size: 20px;
-    padding: 30px;
-    border: none;
-    outline: none;
-    background-color: transparent;
-  }
-  .chat-send-button {
-    width: 40px;
-    margin: 0 10px;
-    background-color: transparent;
-    border: none;
-    outline: none;
-  }
+  margin-bottom: 30px;
 }
-.chat-mic-button {
-  width: 40px;
-  margin: 0 10px;
-  background-color: transparent;
+
+.chat-input-box {
+  display: flex;
+  align-items: center;
+  width: 80%;
+  /* max-width: 800px; */
+  background-color: #fff;
+  border: 1px solid rgba(0, 19, 47, 0.5);
+  border-radius: 24px;
+  padding: 10px;
+  gap: 10px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Resizable Text Area */
+.chat-input-box textarea {
+  flex: 1;
+  min-height: 48px;
+  max-height: 150px;
+  font-size: 16px;
+  padding: 10px;
   border: none;
   outline: none;
+  resize: none;
+  overflow-y: auto;
 }
+
+/* Buttons */
+.chat-mic-button,
+.chat-send-button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+}
+
+/* Breathing Animation for Recording */
 .breathing-animation {
   animation: breathing 1s infinite alternate;
 }
@@ -75,10 +90,29 @@
     opacity: 0.7;
   }
   to {
-    transform: scale(1.5);
+    transform: scale(1.3);
     opacity: 1;
   }
 }
+
+/* Responsive Behavior */
+@media screen and (max-width: 600px) {
+  .chat-input-box {
+    width: 95%;
+    padding: 8px;
+  }
+
+  .chat-input-box textarea {
+    font-size: 14px;
+  }
+
+  .chat-mic-button,
+  .chat-send-button {
+    font-size: 18px;
+    padding: 3px;
+  }
+}
+
 /* chat suggestion area */
 
 .chat-welcome {
@@ -98,61 +132,176 @@
   }
 }
 
-/* suggestions */
-
+/* Suggestions Container */
 .suggestions-container {
   display: flex;
   align-items: center;
   justify-content: center;
-  /* overflow: hidden; */
-  /* width: 70%; */
-  margin-bottom: 10px;
+  width: 100%;
+  max-width: 800px;
+  margin: 10px auto;
+  overflow: hidden;
 }
 
+/* Scrollable Suggestions List */
 .suggestions-list {
-  width: 50%;
   display: flex;
   gap: 10px;
   overflow-x: auto;
   scrollbar-width: none;
   scroll-behavior: smooth;
-  /* white-space: nowrap; */
-  /* width: 100%; */
+  width: 100%;
   padding: 5px;
 }
 
+/* Hide scrollbar for better UI */
+.suggestions-list::-webkit-scrollbar {
+  display: none;
+}
+
+/* Individual Suggestion Item */
 .suggestion-item {
   display: flex;
   align-items: center;
-  height: 50px;
-  width: 100%;
-  white-space: nowrap;
-  padding: 8px 12px;
+  justify-content: center;
+  height: 45px;
+  padding: 10px 14px;
   background: #f1f1f1;
-  border-radius: 8px;
+  opacity: 0.7;
+  border-radius: 10px;
   border: 1px solid #ccc;
   cursor: pointer;
+  flex-shrink: 0;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+  transition: background 0.2s ease-in-out;
 }
 
 .suggestion-item:hover {
   background: #e0e0e0;
 }
 
+/* Scroll Buttons */
 .scroll-btn {
   border: none;
-  background: transparent;
-  font-size: 24px;
+  font-size: 18px;
   cursor: pointer;
-  padding: 5px;
+  padding: 8px;
+  border-radius: 50%;
+  transition: background 0.2s;
+}
+
+.scroll-btn:hover {
+  background: #bbb;
+}
+
+/* ✅ RESPONSIVENESS */
+
+/* Tablets */
+@media screen and (max-width: 1024px) {
+  .suggestions-container {
+    max-width: 600px;
+  }
+
+  .suggestion-item {
+    font-size: 13px;
+    padding: 8px 12px;
+  }
+
+  .scroll-btn {
+    font-size: 16px;
+    padding: 6px;
+  }
+  .chat-welcome {
+    p {
+      font-size: 30px;
+    }
+  }
+}
+
+/* Mobile */
+@media screen and (max-width: 768px) {
+  .chat-welcome {
+    p {
+      font-size: 20px;
+    }
+  }
+  .chat-bottom {
+    height: 80px;
+  }
+  .chat-input {
+    border-radius: 50px;
+    height: 44px;
+    input {
+      width: 100%;
+      height: 100%;
+      font-size: 15px;
+      padding: 20px;
+      border: none;
+      outline: none;
+      background-color: transparent;
+    }
+    .chat-send-button {
+      width: 40px;
+      margin: 0 10px;
+      background-color: transparent;
+      border: none;
+      outline: none;
+    }
+  }
+  .suggestions-container {
+    max-width: 90%;
+  }
+
+  .suggestions-list {
+    gap: 8px;
+  }
+
+  .suggestion-item {
+    font-size: 12px;
+    padding: 6px 10px;
+    height: 40px;
+  }
+
+  .scroll-btn {
+    font-size: 14px;
+    padding: 5px;
+  }
+}
+
+/* Small Mobile */
+@media screen and (max-width: 480px) {
+  .chat-welcome {
+    p {
+      font-size: 15px;
+    }
+  }
+  .suggestions-container {
+    max-width: 100%;
+  }
+
+  .suggestions-list {
+    gap: 6px;
+  }
+
+  .suggestion-item {
+    font-size: 11px;
+    padding: 5px 8px;
+    height: 35px;
+  }
+
+  .scroll-btn {
+    font-size: 12px;
+    padding: 4px;
+  }
 }
 
 /* responsive */
 @media screen and (max-width: 768px) {
   .center {
     width: 90%;
-  }
-  .chat-bottom {
-    height: auto;
   }
 }
 

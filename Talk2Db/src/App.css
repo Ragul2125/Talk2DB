@@ -10,6 +10,7 @@
   user-select: none;
   box-sizing: border-box;
   font-family: "Nunito Sans";
+  transition: 0.2s;
 }
 
 ::-webkit-scrollbar {
