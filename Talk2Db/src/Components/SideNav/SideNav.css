@@ -1,5 +1,97 @@
+/* Base styles */
 .Sidebar {
   height: 100dvh;
-  min-width: 270px;
+  width: 270px;
   background-color: var(--navcolor);
+  color: #ffffff;
+  padding: 1em;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.3s ease;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.Sidebar.closed {
+  transform: translateX(-100%);
+}
+
+.sidebar-toggle-btn {
+  position: fixed;
+  left: 5px;
+  top: 10px;
+  background-color: var(--navcolor);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  cursor: pointer;
+  z-index: 99;
+  display: block;
+  font-size: 1.5em;
+}
+
+.sideNav-top {
+  height: 80%;
+
+  header {
+    color: #ffffff;
+    font-size: 1.5em;
+    display: flex;
+    justify-content: space-between;
+    .close,
+    .new-chat {
+      cursor: pointer;
+    }
+  }
+  .his {
+    height: 95%;
+    overflow: scroll;
+    margin-top: 2em;
+  }
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #ffffff;
+  color: black;
+  padding: 0.25em 0.5em;
+  border-radius: 50px;
+  cursor: pointer;
+  .profile-img {
+    img {
+      border-radius: 50%;
+    }
+  }
+}
+
+/* History styles */
+.history {
+  padding-top: 1em;
+  .history-area {
+    padding-top: 0.5em;
+    .historys {
+      display: flex;
+      flex-direction: column;
+      .row {
+        width: auto;
+        display: flex;
+        justify-content: space-around;
+        align-items: center !important;
+        gap: 1em;
+        padding: 0.5em;
+        cursor: pointer;
+      }
+      .row:hover {
+        background-color: rgba(79, 97, 125, 0.65);
+        border-radius: 10px;
+      }
+    }
+  }
 }
