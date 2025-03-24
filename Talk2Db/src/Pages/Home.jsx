@@ -1,14 +1,17 @@
-import React from 'react'
-import './Pages.css'
-import SideNav from '../Components/SideNav/SideNav'
-import ChatArea from '../Components/ChatArea/ChatArea'
+import React, { useState } from 'react';
+import './Pages.css';
+import SideNav from '../Components/SideNav/SideNav';
+import ChatArea from '../Components/ChatArea/ChatArea';
+
 const Home = () => {
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  
   return (
     <div className='Homepg'>
-      <SideNav/>
-      <ChatArea/>
+      <SideNav isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />
+      <ChatArea sidebarOpen={sidebarOpen} />
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
