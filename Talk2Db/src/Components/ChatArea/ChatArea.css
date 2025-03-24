@@ -1,6 +1,6 @@
-.chat-pg{
-    width: calc(100dvw - 270px);
-    height: 100dvh;
-    background-color: var(--bgwhite);
-    /* background-color: aqua; */
+.chat-pg {
+  width: calc(100dvw - 270px);
+  height: 100dvh;
+  background-color: var(--bgwhite);
+  /* background-color: aqua; */
 }
