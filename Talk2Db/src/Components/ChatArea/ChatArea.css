@@ -305,26 +305,69 @@
   }
 }
 
-/* ==================message=============== */
+/* ================== Messages Container =============== */
 .messages {
   margin-top: 3em;
   padding: 2em;
-  height: 650px;
-  /* width:100%; */
-  overflow: scroll;
+  height: 750px;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
-  align-items: end;
   gap: 1.5em;
-  /* background-color: aquamarine; */
+}
+
+/* ================== Individual Messages =============== */
+.message {
+  max-width: 75%;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  padding: 0.7em 1.2em;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  border-radius: 10px;
+  font-size: 15px;
+  color: rgba(0, 0, 0, 0.8);
+  display: inline-block;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+/* ================== User Message (Align Right) =============== */
+.user-message {
+  background-color: rgba(255, 255, 255, 0.411); /* Blue for user messages */
+  color: black;
+  align-self: flex-end; /* Aligns message to the right */
+  border-bottom-right-radius: 0;
+}
+
+/* ================== Bot Message (Align Left) =============== */
+.bot-message {
+  background-color: var(--tableblue); /* Light gray for bot messages */
+  color: white;
+  align-self: flex-start; /* Aligns message to the left */
+  border-bottom-left-radius: 0;
+}
+
+.table {
+  min-width: 75%;
+}
+.table-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  h2 {
+    padding: 10px;
+  }
+  span {
+    width: 100px;
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
+/* ================== Ensure Responsiveness =============== */
+@media (max-width: 768px) {
   .message {
-    width: auto;
-    padding: 0.5em 1em;
-    background-color: #ffffff;
-    float: right;
-    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-    border-radius: 10px;
-    font-size: 1.2em;
-    color: rgb(0, 0, 0, 66%);
+    max-width: 90%; /* Expand width on smaller screens */
+    font-size: 1em;
   }
 }

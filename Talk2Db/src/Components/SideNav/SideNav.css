@@ -1,7 +1,7 @@
 /* Base Sidebar Styles */
 .Sidebar {
   height: 100dvh;
-  width: 270px;
+  width: 300px;
   background-color: var(--navcolor);
   color: #ffffff;
   padding: 1em;
@@ -112,6 +112,9 @@
         gap: 1em;
         padding: 0.5em;
         cursor: pointer;
+        p {
+          font-size: 15px;
+        }
       }
       .row:hover {
         background-color: rgba(79, 97, 125, 0.65);

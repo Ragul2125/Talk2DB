@@ -70,3 +70,9 @@ button {
   background: none;
   cursor: pointer;
 }
+
+.full-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

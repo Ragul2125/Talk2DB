@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./ChatArea.css";
 import InputBox from "./ChatComp/InputBox";
 import Suggestions from "./ChatComp/Suggestion";
+import Messages from "./ChatComp/Messages";
 const ChatArea = ({ sidebarOpen }) => {
   const [value, setValue] = useState("");
   const [messages, setMessages] = useState([
@@ -17,9 +18,14 @@ const ChatArea = ({ sidebarOpen }) => {
       const newMessage = {
         id: new Date().getTime(),
         text: value,
+        sender: "user",
+      };
+      const newMessage1 = {
+        id: new Date().getTime(),
+        text: "sollu da loosu bunda",
         sender: "bot",
       };
-      setMessages([...messages, newMessage]);
+      setMessages([...messages, newMessage, newMessage1]);
       setValue("");
     }
   };
@@ -34,18 +40,7 @@ const ChatArea = ({ sidebarOpen }) => {
             </h1>
           </nav>
           {messages.length > 0 ? (
-            <div className="messages">
-              {messages.map((message) => (
-                <div
-                  key={message.id}
-                  className={`message ${
-                    message.sender === "user" ? "user-message" : "bot-message"
-                  }`}
-                >
-                  {message.text}
-                </div>
-              ))}
-            </div>
+            <Messages messages={messages} />
           ) : (
             <div className="chat-welcome">
               {/* <h1>Welcome to Talk2DB</h1> */}
