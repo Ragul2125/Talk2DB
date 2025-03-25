@@ -24,7 +24,7 @@ const Suggestions = ({ setInputValue }) => {
       </button>
       <div className="suggestions-list" ref={scrollRef}>
         {suggestions.map((text, index) => (
-          <div
+          <div  
             key={index}
             className="suggestion-item"
             onClick={() => setInputValue(text)}
