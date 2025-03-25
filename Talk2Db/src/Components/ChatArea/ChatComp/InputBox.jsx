@@ -10,11 +10,27 @@ const InputBox = ({ value, onChange, sendMessage }) => {
       ? new (window.SpeechRecognition || window.webkitSpeechRecognition)()
       : null;
 
-  useEffect(() => {
-    if (textareaRef.current) {
-      textareaRef.current.style.height = "48px"; // Default height
-      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+  const adjustTextareaHeight = () => {
+    const textarea = textareaRef.current;
+    if (textarea) {
+      // Reset height to auto to calculate the correct scroll height
+      textarea.style.height = 'auto';
+      
+      // Calculate the scroll height
+      const scrollHeight = textarea.scrollHeight;
+      
+      // Set height with min and max constraints
+      const newHeight = Math.min(
+        Math.max(scrollHeight, 48), // Minimum height of 48px
+        150 // Maximum height of 150px
+      );
+      
+      textarea.style.height = `${newHeight}px`;
     }
+  };
+
+  useEffect(() => {
+    adjustTextareaHeight();
   }, [value]);
 
   const handleKeyDown = (e) => {
@@ -31,6 +47,10 @@ const InputBox = ({ value, onChange, sendMessage }) => {
     }
 
     if (!isRecording) {
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      recognition.lang = 'en-US';
+      
       recognition.start();
       setIsRecording(true);
     } else {
@@ -39,8 +59,12 @@ const InputBox = ({ value, onChange, sendMessage }) => {
     }
 
     recognition.onresult = (event) => {
-      const transcript = event.results[0][0].transcript;
-      onChange((prev) => prev + " " + transcript);
+      const transcript = Array.from(event.results)
+        .map(result => result[0])
+        .map(result => result.transcript)
+        .join('');
+      
+      onChange(prev => prev + " " + transcript.trim());
     };
 
     recognition.onspeechend = () => {
@@ -48,7 +72,8 @@ const InputBox = ({ value, onChange, sendMessage }) => {
       recognition.stop();
     };
 
-    recognition.onerror = () => {
+    recognition.onerror = (event) => {
+      console.error('Speech recognition error:', event.error);
       setIsRecording(false);
     };
   };
@@ -66,9 +91,16 @@ const InputBox = ({ value, onChange, sendMessage }) => {
           ref={textareaRef}
           placeholder="Ask here..."
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={(e) => {
+            onChange(e.target.value);
+          }}
           onKeyDown={handleKeyDown}
           rows={1}
+          style={{
+            minHeight: '48px',
+            maxHeight: '150px',
+            overflowY: value.length > 0 ? 'auto' : 'hidden'
+          }}
         />
         <button
           type="button"
@@ -81,7 +113,11 @@ const InputBox = ({ value, onChange, sendMessage }) => {
             <RiMic2Line size={22} />
           )}
         </button>
-        <button className="chat-send-button" type="submit">
+        <button 
+          className="chat-send-button" 
+          type="submit"
+          disabled={value.trim() === ''}
+        >
           <FaArrowRight size={22} />
         </button>
       </form>
