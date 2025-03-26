@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./SideNav.css";
 import { LuPanelLeftClose, LuPanelRightClose, LuLogOut } from "react-icons/lu";
 import { HiOutlinePencilAlt } from "react-icons/hi";
 import profileImg from "../../assets/profile_img.jpg";
 import History from "./Comp/History";
+import { useNavigate } from "react-router-dom";
 
 const SideNav = ({ isOpen, setIsOpen }) => {
+  const navigate = useNavigate();
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
@@ -29,7 +31,12 @@ const SideNav = ({ isOpen, setIsOpen }) => {
             <div className="close" onClick={toggleSidebar}>
               <LuPanelLeftClose />
             </div>
-            <div className="new-chat">
+            <div
+              onClick={() => {
+                navigate("/");
+              }}
+              className="new-chat"
+            >
               <HiOutlinePencilAlt />
             </div>
           </header>

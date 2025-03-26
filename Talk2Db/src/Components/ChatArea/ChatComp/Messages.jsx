@@ -20,10 +20,10 @@ const Messages = ({ messages }) => {
               {message.text}
             </div>
           ) : message?.responseType === "query" ? (
-            <Table data={message.data} query={message.query} />
+            <Table query={message.query} />
           ) : (
             <div key={message.id} className={`message ${"bot-message"}`}>
-              {message.data}
+              {message.query}
             </div>
             // <DotLottieReact
             //   src="https://lottie.host/0c5482cc-d4ac-4bc2-9103-c99dfc41cdf5/XOXUC3g19t.lottie"

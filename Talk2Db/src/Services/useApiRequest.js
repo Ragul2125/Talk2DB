@@ -26,7 +26,7 @@ const useApiRequest = () => {
         },
         data: body,
       });
-
+      console.log(response.data);
       setData(response.data);
       return response.data;
     } catch (err) {
