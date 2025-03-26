@@ -22,14 +22,14 @@ const Messages = ({ messages }) => {
           ) : message?.responseType === "query" ? (
             <Table data={message.data} query={message.query} />
           ) : (
-            // <div key={message.id} className={`message ${"bot-message"}`}>
-            //   {message.data}
-            // </div>
-            <DotLottieReact
-              src="https://lottie.host/0c5482cc-d4ac-4bc2-9103-c99dfc41cdf5/XOXUC3g19t.lottie"
-              loop
-              autoplay
-            />
+            <div key={message.id} className={`message ${"bot-message"}`}>
+              {message.data}
+            </div>
+            // <DotLottieReact
+            //   src="https://lottie.host/0c5482cc-d4ac-4bc2-9103-c99dfc41cdf5/XOXUC3g19t.lottie"
+            //   loop
+            //   autoplay
+            // />
           )}
         </>
       ))}
