@@ -10,13 +10,7 @@ const ChatArea = ({ sidebarOpen }) => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [value, setValue] = useState("");
-  const [messages, setMessages] = useState([
-    // {
-    //   id: new Date().getTime(),
-    //   text: "Hey there",
-    //   sender: "user",
-    // },
-  ]);
+  const [messages, setMessages] = useState([]);
 
   const handleSend = async () => {
     if (value.trim() !== "") {
@@ -25,46 +19,68 @@ const ChatArea = ({ sidebarOpen }) => {
         text: value,
         sender: "user",
       };
-      setMessages([...messages, newMessage]);
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
+
       const body = {
         query: value,
         conversation_id: id,
       };
-      const queryResponse = await request("/generate_sql", "POST", body);
-      console.log(queryResponse);
-      const dataResponse = await request("/execute_query", "POST", {
-        query: queryResponse.sql,
-      });
-      console.table(dataResponse);
-      const botMessage = {
-        id: new Date().getTime(),
-        data: dataResponse,
-        query: queryResponse,
-        sender: "bot",
-      };
-      setMessages([...messages, botMessage]);
-      if (!id) {
-        navigate(`/${queryResponse.conversation_id}`);
+      setValue("");
+
+      try {
+        const queryResponse = await request("/generate_sql", "POST", body);
+        if (!queryResponse || !queryResponse.sql) {
+          console.error("Failed to generate SQL query.");
+          return;
+        }
+
+        // Detect response type
+        const sqlText = queryResponse.sql.trim().toUpperCase();
+        const isSQLQuery =
+          sqlText.startsWith("SELECT") || sqlText.startsWith("SHOW");
+
+        let botMessage;
+
+        if (isSQLQuery) {
+          // If it's a valid SQL query, execute it
+          const dataResponse = await request("/execute_query", "POST", {
+            query: queryResponse.sql,
+          });
+
+          if (dataResponse && Array.isArray(dataResponse.results)) {
+            console.table(dataResponse.results);
+          } else {
+            console.error("Invalid response from execute_query.");
+            return;
+          }
+
+          botMessage = {
+            id: new Date().getTime(),
+            data: dataResponse.results,
+            query: queryResponse.sql,
+            sender: "bot",
+            responseType: "query", // ✅ Mark as a SQL query response
+          };
+        } else {
+          // If it's just a message, return it as is
+          botMessage = {
+            id: new Date().getTime(),
+            data: queryResponse.sql, // The message content
+            sender: "bot",
+            responseType: "message", // ✅ Mark as a normal message response
+          };
+        }
+
+        setMessages((prevMessages) => [...prevMessages, botMessage]);
+
+        if (!id && queryResponse.conversation_id) {
+          navigate(`/${queryResponse.conversation_id}`);
+        }
+      } catch (error) {
+        console.error("Error processing query:", error);
       }
     }
   };
-
-  // const handleSend = () => {
-  //   if (value.trim() !== "") {
-  //     const newMessage = {
-  //       id: new Date().getTime(),
-  //       text: value,
-  //       sender: "user",
-  //     };
-  //     const newMessage1 = {
-  //       id: new Date().getTime(),
-  //       text: "sollu da loosu bunda",
-  //       sender: "bot",
-  //     };
-  //     setMessages([...messages, newMessage, newMessage1]);
-  //     setValue("");
-  //   }
-  // };
 
   return (
     <div className={`ChatArea ${sidebarOpen ? "" : "sidebar-closed"}`}>
