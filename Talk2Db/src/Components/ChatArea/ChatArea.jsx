@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./ChatArea.css";
 import InputBox from "./ChatComp/InputBox";
 import Suggestions from "./ChatComp/Suggestion";
@@ -82,17 +82,32 @@ const ChatArea = ({ sidebarOpen }) => {
     }
   };
 
+  const [shadow, setShadow] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        setShadow(true);
+      } else {
+        setShadow(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
     <div className={`ChatArea ${sidebarOpen ? "" : "sidebar-closed"}`}>
       <div className="chat-pg">
-        <div className="center">
-          <nav className="chat-nav">
+        <div className="center" >
+          <nav className="chat-nav"  >
             <h1>
               TALK<span>2</span>DB
             </h1>
           </nav>
           {messages.length > 0 ? (
-            <Messages messages={messages} />
+            <Messages messages={messages}/>
           ) : (
             <div className="chat-welcome">
               {/* <h1>Welcome to Talk2DB</h1> */}
