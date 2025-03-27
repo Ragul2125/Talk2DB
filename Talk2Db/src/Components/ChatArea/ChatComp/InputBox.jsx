@@ -14,17 +14,17 @@ const InputBox = ({ value, onChange, sendMessage }) => {
     const textarea = textareaRef.current;
     if (textarea) {
       // Reset height to auto to calculate the correct scroll height
-      textarea.style.height = 'auto';
-      
+      textarea.style.height = "auto";
+
       // Calculate the scroll height
       const scrollHeight = textarea.scrollHeight;
-      
+
       // Set height with min and max constraints
       const newHeight = Math.min(
         Math.max(scrollHeight, 48), // Minimum height of 48px
         150 // Maximum height of 150px
       );
-      
+
       textarea.style.height = `${newHeight}px`;
     }
   };
@@ -40,6 +40,11 @@ const InputBox = ({ value, onChange, sendMessage }) => {
     }
   };
 
+  if (recognition) {
+    recognition.continuous = false;
+    recognition.interimResults = false;
+  }
+
   const handleMicClick = () => {
     if (!recognition) {
       alert("Speech recognition not supported in this browser.");
@@ -47,10 +52,6 @@ const InputBox = ({ value, onChange, sendMessage }) => {
     }
 
     if (!isRecording) {
-      recognition.continuous = true;
-      recognition.interimResults = true;
-      recognition.lang = 'en-US';
-      
       recognition.start();
       setIsRecording(true);
     } else {
@@ -59,12 +60,8 @@ const InputBox = ({ value, onChange, sendMessage }) => {
     }
 
     recognition.onresult = (event) => {
-      const transcript = Array.from(event.results)
-        .map(result => result[0])
-        .map(result => result.transcript)
-        .join('');
-      
-      onChange(prev => prev + " " + transcript.trim());
+      const transcript = event.results[0][0].transcript;
+      onChange(transcript);
     };
 
     recognition.onspeechend = () => {
@@ -72,8 +69,7 @@ const InputBox = ({ value, onChange, sendMessage }) => {
       recognition.stop();
     };
 
-    recognition.onerror = (event) => {
-      console.error('Speech recognition error:', event.error);
+    recognition.onerror = () => {
       setIsRecording(false);
     };
   };
@@ -97,9 +93,9 @@ const InputBox = ({ value, onChange, sendMessage }) => {
           onKeyDown={handleKeyDown}
           rows={1}
           style={{
-            minHeight: '48px',
-            maxHeight: '150px',
-            overflowY: value.length > 0 ? 'auto' : 'hidden'
+            minHeight: "48px",
+            maxHeight: "150px",
+            overflowY: value.length > 0 ? "auto" : "hidden",
           }}
         />
         <button
@@ -113,10 +109,10 @@ const InputBox = ({ value, onChange, sendMessage }) => {
             <RiMic2Line size={22} />
           )}
         </button>
-        <button 
-          className="chat-send-button" 
+        <button
+          className="chat-send-button"
           type="submit"
-          disabled={value.trim() === ''}
+          disabled={value.trim() === ""}
         >
           <FaArrowRight size={22} />
         </button>

@@ -2,20 +2,29 @@ import { LuCloudDownload } from "react-icons/lu";
 import { MdOutlineInsertChart } from "react-icons/md";
 import { FaEye } from "react-icons/fa";
 import downloadCSV from "../../../Services/csv";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState, useCallback } from "react";
 import { GoCopy } from "react-icons/go";
 import "./table.css";
 import { VscRunBelow } from "react-icons/vsc";
 import useApiRequest from "../../../Services/useApiRequest";
 
 const Table = ({ query }) => {
-  const { request, loading, error } = useApiRequest();
-  const { request: vreq, loading: vload, error: vErr } = useApiRequest();
+  const { request, loading } = useApiRequest();
+  const { request: vreq } = useApiRequest();
+
   const [data, setData] = useState([]);
   const [headers, setHeaders] = useState([]);
   const [showQuery, setShowQuery] = useState(true);
   const [copied, setCopied] = useState(false);
+  const [showChartOptions, setShowChartOptions] = useState(false);
+  const [showVisualize, setShowVisualize] = useState(false);
+  const [visualize, setVisualize] = useState("");
   const [rowCount, setRowCount] = useState(100);
+  const [matrix, setMatrix] = useState("0 x 0");
+  const [fetchingMore, setFetchingMore] = useState(false);
+
+  const queryEndRef = useRef(null);
+  const observer = useRef();
 
   const handleCopy = () => {
     navigator.clipboard.writeText(query);
@@ -23,35 +32,62 @@ const Table = ({ query }) => {
     setTimeout(() => setCopied(false), 1500);
   };
 
-  // const handleVisualize = async() => {
-  //   const visualize = await vreq("/generate_chart", "POST", {
-  //     query: query,
-  //   });
-  // };
-
   const handleExecute = async () => {
-    // If it's a valid SQL query, execute it
+    setFetchingMore(true);
     const dataResponse = await request("/execute_query", "POST", {
       query: query,
       row_count: rowCount,
     });
 
     if (dataResponse && Array.isArray(dataResponse.results)) {
-      setData(dataResponse.results);
       setHeaders(Object.keys(dataResponse.results[0]));
+      setData(dataResponse.results);
+      const rows = dataResponse.results.length;
+      const columns = Object.keys(dataResponse.results[0]).length;
+      setMatrix(`${rows} x ${columns}`);
     } else {
       console.error("Invalid response from execute_query.");
+    }
+
+    setFetchingMore(false);
+  };
+
+  const handleVisualize = async (chartType) => {
+    if (!chartType) {
+      setShowChartOptions((prev) => !prev); // Toggle dropdown
       return;
+    }
+
+    setShowChartOptions(false); // Close dropdown after selection
+
+    const visualize = await vreq("/generate_chart", "POST", {
+      query: query,
+      num_rows: `${rowCount}`,
+      chart_type: chartType, // Pass selected chart type
+    });
+
+    if (visualize) {
+      setVisualize(visualize.image);
+      setShowVisualize(true);
     }
   };
 
-  const queryEndRef = useRef(null);
+  const lastRowRef = useCallback(
+    (node) => {
+      if (loading || fetchingMore) return;
+      if (observer.current) observer.current.disconnect();
 
-  useEffect(() => {
-    if (showQuery) {
-      queryEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [showQuery]);
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && data.length % 100 === 0) {
+          setRowCount((prev) => prev + 100);
+          handleExecute();
+        }
+      });
+
+      if (node) observer.current.observe(node);
+    },
+    [loading, fetchingMore, data]
+  );
 
   return (
     <>
@@ -80,19 +116,39 @@ const Table = ({ query }) => {
       {data.length > 0 && (
         <div className="message bot-message table">
           <div className="table-top">
-            <h2>Table title</h2>
-            <span>
+            <h2>{matrix}</h2>
+            <span className="span">
               <LuCloudDownload
                 onClick={() => downloadCSV(data, "test.csv")}
                 size={20}
                 cursor={"pointer"}
                 title="Download as CSV"
               />
-              <MdOutlineInsertChart
-                size={20}
-                cursor={"pointer"}
-                title="Visualize Query"
-              />
+              <span className="visualize-container">
+                <MdOutlineInsertChart
+                  size={20}
+                  onClick={() => handleVisualize()} // Just toggle the dropdown
+                  cursor="pointer"
+                  title="Visualize Query"
+                />
+
+                {showChartOptions && (
+                  <div className="chart-dropdown">
+                    <button onClick={() => handleVisualize("bar")}>
+                      📊 Bar Chart
+                    </button>
+                    <button onClick={() => handleVisualize("line")}>
+                      📈 Line Chart
+                    </button>
+                    <button onClick={() => handleVisualize("pie")}>
+                      🥧 Pie Chart
+                    </button>
+                    <button onClick={() => handleVisualize("scatter")}>
+                      🔴 Scatter Chart
+                    </button>
+                  </div>
+                )}
+              </span>
               <FaEye
                 onClick={() => setShowQuery(!showQuery)}
                 size={20}
@@ -112,7 +168,10 @@ const Table = ({ query }) => {
               </thead>
               <tbody>
                 {data.map((row, index) => (
-                  <tr key={index}>
+                  <tr
+                    key={index}
+                    ref={index === data.length - 1 ? lastRowRef : null}
+                  >
                     {headers.map((header) => (
                       <td key={header}>
                         {!row[header] ? "null" : row[header]}
@@ -122,7 +181,23 @@ const Table = ({ query }) => {
                 ))}
               </tbody>
             </table>
+            {fetchingMore && (
+              <div className="fulload">
+                <div className="loader" />
+              </div>
+            )}
           </div>
+        </div>
+      )}
+      {showVisualize && (
+        <div className="query">
+          <code className="query-text">
+            <img
+              src={`data:image/png;base64,${visualize}`}
+              alt="Visualization"
+            />
+          </code>
+          <div ref={queryEndRef} />
         </div>
       )}
     </>

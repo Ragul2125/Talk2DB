@@ -93,11 +93,11 @@ const ChatArea = ({ sidebarOpen }) => {
         <div className="center">
           <nav className="chat-nav">
             <h1>
-              TALK<span>2</span>DB
+              TALK2<span>DB</span>
             </h1>
           </nav>
           {messages?.length > 0 ? (
-            <Messages messages={messages} />
+            <Messages loading={loading} messages={messages} />
           ) : (
             <div className="chat-welcome">
               {/* <h1>Welcome to Talk2DB</h1> */}
