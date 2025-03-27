@@ -11,7 +11,7 @@ const SideNav = ({ isOpen, setIsOpen }) => {
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
-
+  console.log(isOpen)
   return (
     <>
       {/* Toggle Button (Only shown when sidebar is closed) */}

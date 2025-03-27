@@ -4,7 +4,7 @@ import SideNav from "../Components/SideNav/SideNav";
 import ChatArea from "../Components/ChatArea/ChatArea";
 
 const Home = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
     <div className="Homepg">

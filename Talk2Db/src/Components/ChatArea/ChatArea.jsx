@@ -87,6 +87,21 @@ const ChatArea = ({ sidebarOpen }) => {
     }
   };
 
+  const [shadow, setShadow] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        setShadow(true);
+      } else {
+        setShadow(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
     <div className={`ChatArea ${sidebarOpen ? "" : "sidebar-closed"}`}>
       <div className="chat-pg">
