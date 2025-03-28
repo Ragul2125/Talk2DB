@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 
-const BASE_URL = "http://127.0.0.1:5000"; // Set your static base URL here
+const BASE_URL = "http://192.168.204.178:5000"; // Set your static base URL here
 
 const useApiRequest = () => {
   const [loading, setLoading] = useState(false);
@@ -26,7 +26,7 @@ const useApiRequest = () => {
         },
         data: body,
       });
-
+      console.log(response.data);
       setData(response.data);
       return response.data;
     } catch (err) {

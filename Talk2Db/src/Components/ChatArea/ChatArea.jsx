@@ -7,10 +7,28 @@ import useApiRequest from "../../Services/useApiRequest";
 import { useNavigate, useParams } from "react-router-dom";
 const ChatArea = ({ sidebarOpen }) => {
   const { request, loading, error, data } = useApiRequest();
+  const { request: reqM, loading: loadM, error: errM } = useApiRequest();
   const navigate = useNavigate();
   const { id } = useParams();
   const [value, setValue] = useState("");
   const [messages, setMessages] = useState([]);
+
+  useEffect(() => {
+    const fetchMessages = async () => {
+      if (id) {
+        try {
+          const datam = await reqM(`/conversation/${id}`, "GET");
+          console.log(datam);
+          setMessages(datam);
+        } catch (error) {
+          console.error("Error fetching messages:", error);
+        }
+      } else {
+        setMessages([]);
+      }
+    };
+    fetchMessages();
+  }, [id]);
 
   const handleSend = async () => {
     if (value.trim() !== "") {
@@ -42,21 +60,8 @@ const ChatArea = ({ sidebarOpen }) => {
         let botMessage;
 
         if (isSQLQuery) {
-          // If it's a valid SQL query, execute it
-          const dataResponse = await request("/execute_query", "POST", {
-            query: queryResponse.sql,
-          });
-
-          if (dataResponse && Array.isArray(dataResponse.results)) {
-            console.table(dataResponse.results);
-          } else {
-            console.error("Invalid response from execute_query.");
-            return;
-          }
-
           botMessage = {
             id: new Date().getTime(),
-            data: dataResponse.results,
             query: queryResponse.sql,
             sender: "bot",
             responseType: "query", // ✅ Mark as a SQL query response
@@ -65,7 +70,7 @@ const ChatArea = ({ sidebarOpen }) => {
           // If it's just a message, return it as is
           botMessage = {
             id: new Date().getTime(),
-            data: queryResponse.sql, // The message content
+            query: queryResponse.sql, // The message content
             sender: "bot",
             responseType: "message", // ✅ Mark as a normal message response
           };
@@ -103,11 +108,11 @@ const ChatArea = ({ sidebarOpen }) => {
         <div className="center" >
           <nav className="chat-nav"  >
             <h1>
-              TALK<span>2</span>DB
+              TALK2<span>DB</span>
             </h1>
           </nav>
-          {messages.length > 0 ? (
-            <Messages messages={messages}/>
+          {messages?.length > 0 ? (
+            <Messages loading={loading} messages={messages} />
           ) : (
             <div className="chat-welcome">
               {/* <h1>Welcome to Talk2DB</h1> */}

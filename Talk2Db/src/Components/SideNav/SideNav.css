@@ -117,11 +117,17 @@
 .row {
   width: auto;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center !important;
   gap: 1em;
-  padding: 0.5em;
+  padding: 0.5em 1em;
+  margin: 5px 0;
   cursor: pointer;
+}
+
+.active {
+  background-color: rgba(79, 97, 125, 0.35);
+  border-radius: 10px;
 }
 
 .row p {
