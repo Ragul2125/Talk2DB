@@ -105,8 +105,8 @@ const ChatArea = ({ sidebarOpen }) => {
   return (
     <div className={`ChatArea ${sidebarOpen ? "" : "sidebar-closed"}`}>
       <div className="chat-pg">
-        <div className="center" >
-          <nav className="chat-nav"  >
+        <div className="center">
+          <nav className="chat-nav">
             <h1>
               TALK2<span>DB</span>
             </h1>
